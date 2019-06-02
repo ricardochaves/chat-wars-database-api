@@ -1,0 +1,10 @@
+-r requirements.txt
+pylint
+autopep8
+flake8-django
+pylint-django
+coverage
+tox
+tox-travis
+pytest-django
+pytest-cov

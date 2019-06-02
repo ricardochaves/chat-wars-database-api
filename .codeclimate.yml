@@ -1,0 +1,33 @@
+version: "2"
+plugins:
+  pep8:
+    enabled: true
+
+  markdownlint:
+    enabled: true
+
+  sonar-python:
+    enabled: true
+
+  csslint:
+    enabled: true
+
+  bandit:
+    enabled: true
+    config:
+      python_version: 3
+
+  duplication:
+    enabled: false
+    config:
+      languages:
+      - python:
+
+exclude_patterns:
+  - "test/"
+  - ".venv/"
+  - ".vscode/"
+  - "**/staticfiles/"
+  - ".tox/"
+  - ".git/"
+  - "api/migrations"

@@ -1,0 +1,13 @@
+pika
+django
+psycopg2-binary
+
+djangorestframework
+django-filter
+markdown
+djangorestframework-jwt
+cryptography
+pyjwt
+
+django-health-check
+django-cors-headers

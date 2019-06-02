@@ -1,0 +1,61 @@
+version: "3.5"
+services:
+  db:
+    image: postgres:10.1-alpine
+
+  web:
+    build: .
+    ports:
+      - "${PORT}:${PORT}"
+    env_file: .env
+    volumes:
+      - .:/api
+    depends_on:
+      - db
+    command:
+      [
+        "./wait-for-it.sh",
+        "${DB_HOST}:${DB_PORT}",
+        "-t",
+        "120",
+        "--",
+        "./start.sh",
+      ]
+
+  pubsub:
+    build: .
+    env_file: .env
+    volumes:
+      - .:/api
+    depends_on:
+      - db
+    command:
+      [
+        "./wait-for-it.sh",
+        "${DB_HOST}:${DB_PORT}",
+        "-t",
+        "120",
+        "--",
+        "python",
+        "manage.py",
+        "pubsub",
+      ]
+
+  integration_test:
+    build: .
+    env_file: .env
+    volumes:
+      - .:/api
+    depends_on:
+      - db
+      - web
+      - pubsub
+    command:
+      [
+        "./wait-for-it.sh",
+        "${HOST}:${PORT}",
+        "-t",
+        "120",
+        "--",
+        "pytest","-vv", "./api/tests/integration/"
+      ]
