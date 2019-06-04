@@ -16,6 +16,9 @@ import os
 from cryptography.hazmat.backends import default_backend
 from cryptography.x509 import load_pem_x509_certificate
 
+from chatwars_database.conf import S_ALLOWED_HOSTS
+from chatwars_database.conf import S_DATABASES
+from chatwars_database.conf import S_DEBUG
 from six.moves.urllib import request
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -31,7 +34,7 @@ SECRET_KEY = "vm@9(w*68!!+=s#x4ng*t8%(41$u98$6%khl!@4b1ybj6s-r3q"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = S_ALLOWED_HOSTS
 
 
 # Application definition
@@ -86,16 +89,7 @@ WSGI_APPLICATION = "chatwars_database.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": os.getenv("DB_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": os.getenv("DB_DATABASE", os.path.join(BASE_DIR, "db.sqlite3")),
-        "USER": os.getenv("DB_USER"),
-        "HOST": os.getenv("DB_HOST"),
-        "PORT": os.getenv("DB_PORT"),
-        "PASSWORD": os.getenv("DB_PASSWORD"),
-    }
-}
+DATABASES = S_DATABASES
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -119,14 +113,17 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = False
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "chatwarsdatabase/static")
 
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "chatwarsdatabase/media")
 
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
