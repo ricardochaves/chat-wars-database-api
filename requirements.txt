@@ -11,3 +11,5 @@ pyjwt
 
 django-health-check
 django-cors-headers
+
+requests

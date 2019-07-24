@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import json
 import os
 
+import requests
 from cryptography.hazmat.backends import default_backend
 from cryptography.x509 import load_pem_x509_certificate
 
@@ -142,15 +143,19 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
 
-AUTH0_DOMAIN = os.environ.get("AUTH0_DOMAIN")
-API_IDENTIFIER = os.environ.get("API_IDENTIFIER")
+AUTH0_DOMAIN = "ricardobaltazar.auth0.com"
+API_IDENTIFIER = "https://chatwarsdatabase.ricardobaltazar.com"
+
 PUBLIC_KEY = None
 JWT_ISSUER = None
 
 # If AUTH0_DOMAIN is defined, load the jwks.json
 if AUTH0_DOMAIN:
-    jsonurl = request.urlopen("https://" + AUTH0_DOMAIN + "/.well-known/jwks.json")
-    jwks = json.loads(jsonurl.read())
+    import logging
+
+    logging.warning("EXECUTANDO CERTIFICADO")
+    response = requests.get("https://" + AUTH0_DOMAIN + "/.well-known/jwks.json", timeout=1)
+    jwks = response.json()
     cert = "-----BEGIN CERTIFICATE-----\n" + jwks["keys"][0]["x5c"][0] + "\n-----END CERTIFICATE-----"
     certificate = load_pem_x509_certificate(cert.encode("utf-8"), default_backend())
     PUBLIC_KEY = certificate.public_key()
@@ -167,4 +172,5 @@ JWT_AUTH = {
 }
 
 
-CORS_ORIGIN_WHITELIST = ["http://localhost:3000"]
+CORS_ORIGIN_WHITELIST = ["http://localhost:3000", "https://chatwars-database-web.ricardobchaves6.now.sh"]
+CORS_ORIGIN_REGEX_WHITELIST = [r"^https://chatwars-database-web-.*.now.sh$"]
